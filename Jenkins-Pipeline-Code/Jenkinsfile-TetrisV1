@@ -18,45 +18,6 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/nhuluong2024/DevSecOps-Demo.git'
             }
         }
-        // stage('Sonarqube Analysis') {
-        //     steps {
-        //         dir('Tetris-V1') {
-        //             withSonarQubeEnv('sonar-server') {
-        //                 sh ''' $SCANNER_HOME/var/lib/jenkins/plugins/sonar/META-INF/maven/org.jenkins-ci.plugins/sonar -Dsonar.projectName=TetrisVersion1.0 \
-        //                 -Dsonar.projectKey=TetrisVersion1.0 '''
-        //             }
-        //         }
-        //     }
-        // }
-        // stage('Quality Check') {
-        //     steps {
-        //         script {
-        //             waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token' 
-        //         }
-        //     }
-        // }
-        // stage('Installing Dependencies') {
-        //     steps {
-        //         dir('Tetris-V1') {
-        //             sh 'npm install'
-        //         }
-        //     }
-        // }
-        // stage('OWASP Dependency-Check Scan') {
-        //     steps {
-        //         dir('Tetris-V1') {
-        //             dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
-        //             dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
-        //         }
-        //     }
-        // }
-        // stage('Trivy File Scan') {
-        //     steps {
-        //         dir('Tetris-V1') {
-        //             sh 'trivy fs . > trivyfs.txt'
-        //         }
-        //     }
-        // }
         stage("Docker Image Build") {
             steps {
                 script {
@@ -81,39 +42,24 @@ pipeline {
                 }
             }
         }
-        // stage("TRIVY Image Scan") {
-        //     steps {
-        //         sh 'trivy image nhu.luong/tetrisv2:${BUILD_NUMBER} > trivyimage.txt' 
-        //     }
-        // }
         stage('Checkout Code') {
             steps {
                 git branch: 'main', url: 'https://github.com/nhuluong2024/DevSecOps-Demo.git'
             }
         }
-        stage('Update Deployment file') {
-            environment {
-                GIT_REPO_NAME = "DevSecOps-Demo"
-                GIT_USER_NAME = "nhu.luong"
-            }
             steps {
                 dir('Manifest-file') {
-                    withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
-                        sh '''
-                            git config user.email "nhu.luong@zicloudtech.com"
-                            git config user.name "nhu.luong"
-                            BUILD_NUMBER=${BUILD_NUMBER}
-                            echo $BUILD_NUMBER
-                            sed -i "s/tetrisv1:${imageTag}/tetrisv1:${BUILD_NUMBER}/" deployment-service.yml
-                            git add deployment-service.yml
-                            git add --all
-                            git add .
-                            git commit -m "Update deployment Image to version \${BUILD_NUMBER}"**
-                            git clean -n
-                            git push -f https://${GITHUB_TOKEN}@github.com/nhuluong2024/DevSecOps-Demo.git HEAD:main
-                        '''
+                    withAWS( region:'us-west-2', credentials:'aws-key' ) {
+                        sh 'echo "Deploying image to AWS EKS cluster ..."'
+                        sh 'aws eks --region us-west-2 update-kubeconfig --name Tetris-EKS-Cluster-demo'
+                        sh 'kubectl config use-context arn:aws:eks:us-west-2:428819381342:cluster/Tetris-EKS-Cluster-demo' 
+                        sh 'cd Manifest-file'
+                        sh 'pwd'
+                        sh 'ls -la'
+                        sh 'kubectl apply -f deployment-service.yml'
+                        sh 'kubectl get deployment'
+                        sh 'kubectl get pod -o wide'                        
                     }
-                }
             }
         }
     }
