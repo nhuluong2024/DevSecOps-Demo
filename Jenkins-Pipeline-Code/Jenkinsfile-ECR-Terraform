@@ -1,6 +1,6 @@
 properties([
     parameters([
-        string(defaultValue: 'variables.tfvars', description: 'Specify the file name', name: 'File-Name'),
+        string(defaultValue: 'variables.tfvars -lock=false', description: 'Specify the file name', name: 'File-Name'),
         choice(choices: ['apply', 'destroy'], description: 'Select Terraform action', name: 'Terraform-Action')
     ])
 ])
@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Checkout from Git') {
             steps {
-                git branch: 'main', url: 'https://github.com/nhuluong2024/DevSecOps-Demo.git'
+                git branch: 'devops-handson', url: 'https://github.com/nhuluong2024/DevSecOps-Demo.git'
             }
         }
         stage('Initializing Terraform') {

@@ -3,7 +3,6 @@
 ![DevSecOps](https://img.shields.io/badge/DevSecOps-mainy-brightgreen)
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-Orchestration-blueviolet)
 ![Jenkins](https://img.shields.io/badge/Jenkins-Automation-orange)
-![ArgoCD](https://img.shields.io/badge/ArgoCD-Continuous%20Delivery-blue)
 ![Docker](https://img.shields.io/badge/Docker-Containerization-blue)
 ![Terraform](https://img.shields.io/badge/Terraform-Infrastructure%20as%20Code-9cf)
 
@@ -34,13 +33,10 @@ Welcome to an immersive DevSecOps learning experience! This project guides you t
 
 ## Tools Explored 🛠️
 1. **Jenkins:** Automated CI/CD pipelines
-2. **ArgoCD:** Continuous deployment to Kubernetes
-3. **Kubernetes:** Orchestration for containerized applications
-4. **Trivy:** Container vulnerability scanner
-5. **OWASP Dependency-Check:** Ensuring secure dependencies
-6. **Docker:** Containerized application deployment
-7. **SonarQube:** Unveiling code quality insights
-8. **Terraform:** Infrastructure as Code for AWS EKS
+2. **EKS:** Orchestration for containerized applications
+3. **ECR:** Managed container image registry service that is secure, scalable, and reliable.
+4. **Docker:** Containerized application deployment
+5. **Terraform:** Infrastructure as Code for Jenkins Server, AWS EKS vs ECR.
 
 ## Blog Implementation 📝
    To implement this project, follow the step-by-step guide in our detailed [Docs guide](https://github.com/nhuluong2024/DevSecOps-Demo/blob/main/DevSecOps-Demo-Docs.docx). Learn how each tool plays a crucial role in achieving DevSecOps excellence.
